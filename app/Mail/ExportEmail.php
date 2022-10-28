@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -18,7 +19,7 @@ class ExportEmail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(protected String $filename)
     {
         //
     }
@@ -43,7 +44,10 @@ class ExportEmail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.export',
+            with: [
+                'filename' => $this->filename,
+            ]
         );
     }
 
@@ -54,6 +58,8 @@ class ExportEmail extends Mailable
      */
     public function attachments()
     {
-        return [];
+        return [
+            Attachment::fromStorage($this->filename),
+        ];
     }
 }

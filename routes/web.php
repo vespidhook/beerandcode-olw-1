@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\BeerController;
+use App\Http\Controllers\ExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,8 +35,14 @@ require __DIR__.'/auth.php';
 
 Route::group([
     'prefix' => 'beers',
+    'middleware' => 'auth'
 ], function () {
     Route::get('/', [BeerController::class, 'index']);
 
     Route::get('/export', [BeerController::class, 'export']);
+
+    Route::resource('reports', ExportController::class)
+        ->only(['index', 'destroy']);
 });
+
+
